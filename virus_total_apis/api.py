@@ -22,7 +22,7 @@ print json.dumps(response, sort_keys=False, indent=4)
 """
 
 import os
-import StringIO
+from io import StringIO
 try:
     import requests
 except ImportError:
@@ -67,10 +67,10 @@ class PublicApi():
         """
         params = {'apikey': self.api_key}
         try:
-            if os.path.isfile(this_file):
-                files = {'file': (os.path.basename(this_file), open(this_file, 'rb').read())}
-            elif isinstance(this_file, StringIO.StringIO):
+            if isinstance(this_file, StringIO):
                 files = {'file': this_file.read()}
+            elif os.path.isfile(this_file):
+                files = {'file': (os.path.basename(this_file), open(this_file, 'rb').read())}
             else:
                 files = {'file': this_file}
         except TypeError as e:
